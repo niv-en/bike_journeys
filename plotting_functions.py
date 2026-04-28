@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import geopandas as gpd
 from cartopy import crs as ccrs
-from geodatasets import get_path
 
 import pandas as pd
 from shapely.geometry import Point, Polygon
