@@ -5,4 +5,4 @@ contextily
 pyproj
 cartopy
 matplotlib
-
+streamlit

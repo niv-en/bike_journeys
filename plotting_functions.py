@@ -1,0 +1,115 @@
+import matplotlib.pyplot as plt
+import geopandas as gpd
+from cartopy import crs as ccrs
+from geodatasets import get_path
+
+import pandas as pd
+from shapely.geometry import Point, Polygon
+import numpy as np
+
+import matplotlib as mpl
+import seaborn as sns
+from pyproj import Transformer
+
+import os
+import re
+
+import contextily as ctx
+import numbers
+
+
+def load_trips_df(path) -> pd.DataFrame:
+    return pd.read_csv(path)
+
+def transform_rush_hr(trips_df: pd.DataFrame) -> None:
+    trips_df['rush_hour'] = trips_df['rush_period'].apply(lambda x: False if x == 'non_rush' else True)
+
+
+def get_stations_location(trips_df : pd.DataFrame) -> dict:
+
+    trips_df['start_loc'] = trips_df.apply(lambda x: (x.start_long, x.start_lat), axis=1)
+    trips_df['end_loc'] = trips_df.apply(lambda x: (x.end_long, x.end_lat), axis=1)
+
+    start_stations = [tuple(x) for x in trips_df[['start_station', 'start_loc']].values]
+    end_stations = [tuple(x) for x in trips_df[['end_station', 'end_loc']].values]
+    return dict(set(start_stations + end_stations))
+
+def get_stations_popularity(trips_df : pd.DataFrame) -> dict:
+
+    stations, counts = np.unique(trips_df[['start_station', 'end_station']].values.ravel(), return_counts=True)
+    return  dict(zip(stations, counts))
+
+def plot_stations(ax,
+                  stations_loc: dict,
+                  title: str,
+                  stations_mapping: dict = {},
+                  mapping_label: str | None = None,
+                  background: bool = None,
+                  xy_limits: tuple = None) -> None:
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+
+    counts = False
+
+    x_points = []
+    y_points = []
+    mapping_values = []
+
+    for station, loc in stations_loc.items():
+        x, y = transformer.transform(loc[0], loc[1])
+        x_points.append(x)
+        y_points.append(y)
+
+        mapping_values.append(stations_mapping.get(station, None))
+
+    points_df = pd.DataFrame.from_dict({'x': x_points,
+                                        'y': y_points,
+                                        'vals': mapping_values})
+
+    match points_df.loc[0, 'vals']:
+
+        case numbers.Number():
+
+            points_df['vals'].fillna(0)
+            x_points, y_points = points_df['x'], points_df['y']
+            mapping_values = points_df['vals']
+
+            sp = ax.scatter(x_points, y_points,
+                            s=5,
+                            c=mapping_values,
+                            cmap='RdBu',
+                            vmin=min(mapping_values),
+                            vmax=max(mapping_values),
+                            alpha=1)
+
+        case str():
+
+            points_df['vals'].fillna('NA')
+            groups = points_df['vals'].unique()
+            for group in groups:
+                temp_df = points_df[points_df['vals'] == group]
+                x_points, y_points = temp_df['x'], temp_df['y']
+                sp = ax.scatter(x_points, y_points,
+                                s=5,
+                                label=group,
+                                alpha=1)
+
+        case _:
+
+            x_points, y_points = points_df['x'], points_df['y']
+            sp = ax.scatter(x_points, y_points, s=5, alpha=1, c='lightblue')
+
+    if xy_limits:
+        ax.set_xlim(xy_limits[0])
+        ax.set_ylim(xy_limits[1])
+
+    if background:
+        ctx.add_basemap(ax, source=ctx.providers.CartoDB.Positron)
+
+    if stations_mapping != {}:
+        fig = ax.get_figure()
+        fig.colorbar(sp, ax=ax, label=mapping_label, location='bottom')
+
+    ax.set_title(title, size=16)
+    ax.axis('off');
+
+    return ax
