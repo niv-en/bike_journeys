@@ -6,3 +6,4 @@ pyproj
 cartopy
 matplotlib
 streamlit
+seaborn
