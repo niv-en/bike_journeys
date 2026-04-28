@@ -18,7 +18,7 @@ import numbers
 
 
 def load_trips_df(path) -> pd.DataFrame:
-    return pd.read_csv(path)
+    return pd.read_csv(path, compression = 'zip')
 
 def transform_rush_hr(trips_df: pd.DataFrame) -> None:
     trips_df['rush_hour'] = trips_df['rush_period'].apply(lambda x: False if x == 'non_rush' else True)

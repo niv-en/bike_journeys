@@ -11,7 +11,7 @@ if __name__ == '__main__':
     st.write('test')
 
     #dataset
-    trips_df = load_trips_df('01_london_bike_trips_enriched.csv.zip', compression = 'zip')
+    trips_df = load_trips_df('01_london_bike_trips_enriched.csv.zip')
 
     stations_loc = get_stations_location(trips_df)
     stations_pop = get_stations_popularity(trips_df)
