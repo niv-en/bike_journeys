@@ -7,4 +7,3 @@ cartopy
 matplotlib
 streamlit
 seaborn
-zipfile
