@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     #dataset
 
-    st.write(os.file.exists('01_london_bike_trips_enriched.csv.zip') )
+    st.write(os.path.exists('01_london_bike_trips_enriched.csv.zip') )
     trips_df = load_trips_df('01_london_bike_trips_enriched.csv.zip')
 
     stations_loc = get_stations_location(trips_df)
