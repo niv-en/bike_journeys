@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
 
     fig,ax = plt.subplots()
-    ax = plot_stations(ax , stations_loc, f'Station Popularity at {hour if hour <10 else f"0{hour}"  }:00',  stations_pop, 'popularity', True, None)
+    ax = plot_stations(ax , stations_loc, f'Station Popularity at {hour if hour > 10 else f"0{hour}"  }:00',  stations_pop, 'popularity', True, None)
 
     st.pyplot(fig)
 
