@@ -17,7 +17,7 @@ if __name__ == '__main__':
     #culd maybe plot the dataframe here
 
     st.header('Popularity Of Each Station at diff Hours')
-    hour = st.slider('Hour', 0, 24, value = 12, )
+    hour = st.slider('Hour', 0, 23, value = 12, )
 
     st.write('Hour of Day:' ,hour)
 
