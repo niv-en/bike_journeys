@@ -14,14 +14,17 @@ if __name__ == '__main__':
     trips_df = load_trips_df('01_london_bike_trips_enriched.csv.zip')
 
 
-    #creating a slider for popularity
+    #culd maybe plot the dataframe here
 
+    st.header('Popularity Of Each Station at diff Hours')
     hour = st.slider('Hour', 0, 24, value = 12, )
 
     st.write('Hour of Day:' ,hour)
 
-    stations_loc = get_stations_location(trips_df)
-    stations_pop = get_stations_popularity(trips_df)
+    #filter trips by hour
+    trips_df_hour = trips_df[trips_df['Hour']==hour]
+    stations_loc = get_stations_location(trips_df_hour)
+    stations_pop = get_stations_popularity(trips_df_hour)
 
 
     fig,ax = plt.subplots()
