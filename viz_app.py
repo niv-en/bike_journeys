@@ -22,7 +22,7 @@ if __name__ == '__main__':
     st.write('Hour of Day:' ,hour)
 
     #filter trips by hour
-    trips_df_hour = trips_df[trips_df['Hour']==hour]
+    trips_df_hour = trips_df[trips_df['start_hour']==hour]
     stations_loc = get_stations_location(trips_df_hour)
     stations_pop = get_stations_popularity(trips_df_hour)
 
