@@ -10,7 +10,7 @@ if __name__ == '__main__':
 
     st.write('test')
 
-    st.write(os.path.exists('01_london_bike_trips_enriched.csv.zip')
+    st.write(os.path.exists('01_london_bike_trips_enriched.csv.zip'))
     trips_df = load_trips_df('01_london_bike_trips_enriched.csv.zip')
 
 
