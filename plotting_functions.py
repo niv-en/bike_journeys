@@ -71,18 +71,39 @@ def preprocess_df(df, stations_df):
 
     return df
 
+import pandas as pd
+import requests
+from io import StringIO
 
 def load_stations_df():
+    headers = {"User-Agent": "Mozilla/5.0"}
+    url = "https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml"
+    response = requests.get(url, headers=headers, timeout=30)
+    response.raise_for_status()
 
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
+    text = response.text.lstrip()
+    if not text.startswith("<?xml") and "<stations>" not in text:
+        preview = text[:300].replace("\n", " ")
+        raise ValueError(f"Expected XML from TfL feed, got non-XML payload: {preview}")
 
-    stations_url = 'https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml'
-    response = requests.get(stations_url, headers=headers)
-    response = StringIO(response.text)
-    stations_df = pd.read_xml(response, xpath=".//station", parser = 'etree')
-    return stations_df
+    try:
+        return pd.read_xml(StringIO(text), xpath=".//station", parser="etree")
+    except Exception as e:
+        # Optional: retry with lxml parser if installed
+        return pd.read_xml(StringIO(text), xpath=".//station", parser="lxml")
+
+
+#def load_stations_df():
+#
+#    headers = {
+#        "User-Agent": "Mozilla/5.0"
+#    }
+#
+#    stations_url = 'https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml'
+#    response = requests.get(stations_url, headers=headers)
+#    response = StringIO(response.text)
+#    stations_df = pd.read_xml(response, xpath=".//station", parser = 'etree')
+#    return stations_df
 
 def get_station_location(stations_df):
 
