@@ -81,8 +81,7 @@ def load_stations_df():
     stations_url = 'https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml'
     response = requests.get(stations_url, headers=headers)
     response = StringIO(response.text)
-    stations_df = pd.read_xml(response, xpath=".//station")
-
+    stations_df = pd.read_xml(response, xpath=".//station", parser = 'etree')
     return stations_df
 
 def get_station_location(stations_df):
