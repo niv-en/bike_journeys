@@ -1,9 +1,6 @@
 import matplotlib.pyplot as plt
 import geopandas as gpd
 from cartopy import crs as ccrs
-from geodatasets import get_path
-import requests
-from io import StringIO
 
 import pandas as pd
 from shapely.geometry import Point, Polygon
@@ -11,6 +8,7 @@ import numpy as np
 
 import matplotlib as mpl
 import seaborn as sns
+
 from pyproj import Transformer
 
 import os
@@ -19,98 +17,26 @@ import re
 import contextily as ctx
 import numbers
 
-from collections import Counter
-
-from matplotlib.patches import FancyArrowPatch, Circle
-
-import shapely
-
-def load_trips_df():
-
-    journeys_df = pd.DataFrame()
-
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
-
-    dataset_urls = ['419JourneyDataExtract01May2025-14May2025.csv',]
-
-    for url in dataset_urls:
-        url = f'https://cycling.data.tfl.gov.uk/usage-stats/{url}'
-        response = requests.get(url, headers=headers)
-        temp_df = pd.read_csv(StringIO(response.text))
-        journeys_df = pd.concat((journeys_df, temp_df))
-
-    return journeys_df
-
-
-def preprocess_df(df, stations_df):
-    df = df.copy()
-
-    df['start_date'] = pd.to_datetime(df['Start date'], format='mixed')
-    df['end_date'] = pd.to_datetime(df['End date'], format='mixed')
-    df['start_hour'] = df['start_date'].dt.hour
-    df['end_hour'] = df['end_date'].dt.hour
-
-    df.drop(columns=['Start date', 'End date'], inplace=True)
-    # dividing by 60_000 to get to minutes
-    df['duration_mins'] = df['Total duration (ms)'] / 60_000
-
-    df = df[df['duration_mins'] > 3]
-    df = df[df['duration_mins'] < 180]
-
-    rush_hours = {7, 8, 17, 18}
-    weekdays = {1, 2, 3, 4, 5}
-
-    start_weekday, end_weekday = df.start_date.dt.weekday, df.end_date.dt.weekday
-
-    df['rush_hour'] = ((df.start_hour.isin(rush_hours) & start_weekday.isin(weekdays)) |
-                       (df.end_hour.isin(rush_hours) & end_weekday.isin(weekdays)))
-
-    df = df.merge(stations_df, left_on='Start station', right_on='name')
-
-    return df
-
+from zipfile import ZipFile
 import pandas as pd
-import requests
-from io import StringIO
 
-def load_stations_df():
-    headers = {"User-Agent": "Mozilla/5.0"}
-    url = "https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml"
-    response = requests.get(url, headers=headers, timeout=30)
-    response.raise_for_status()
+def load_trips_df(path):
+    with ZipFile(path) as zf:
+        csv_files = [
+            name for name in zf.namelist()
+            if name.endswith(".csv") and not name.startswith("__MACOSX")
+        ]
 
-    text = response.text.lstrip()
-    if not text.startswith("<?xml") and "<stations>" not in text:
-        preview = text[:300].replace("\n", " ")
-        raise ValueError(f"Expected XML from TfL feed, got non-XML payload: {preview}")
+        if not csv_files:
+            raise ValueError(f"No CSV found in ZIP: {zf.namelist()}")
 
-    try:
-        return pd.read_xml(StringIO(text), xpath=".//station", parser="etree")
-    except Exception as e:
-        # Optional: retry with lxml parser if installed
-        return pd.read_xml(StringIO(text), xpath=".//station", parser="lxml")
+        # just take the first valid CSV
+        with zf.open(csv_files[0]) as f:
+            return pd.read_csv(f)
 
+def transform_rush_hr(trips_df: pd.DataFrame) -> None:
+    trips_df['rush_hour'] = trips_df['rush_period'].apply(lambda x: False if x == 'non_rush' else True)
 
-#def load_stations_df():
-#
-#    headers = {
-#        "User-Agent": "Mozilla/5.0"
-#    }
-#
-#    stations_url = 'https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml'
-#    response = requests.get(stations_url, headers=headers)
-#    response = StringIO(response.text)
-#    stations_df = pd.read_xml(response, xpath=".//station", parser = 'etree')
-#    return stations_df
-
-def get_station_location(stations_df):
-
-    stations_df['location'] = stations_df.apply(lambda x: (x.long, x.lat), axis=1)
-    stations_loc = dict(stations_df[['name', 'location']].values)
-
-    return stations_loc
 
 def get_stations_location(trips_df : pd.DataFrame) -> dict:
 
@@ -137,7 +63,6 @@ def plot_stations(ax,
                   location_labels: dict = None,
                   size_scaling: bool = True,
                   alpha_scaling: bool = True) -> None:
-
     transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
 
     counts = False
