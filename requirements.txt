@@ -11,3 +11,4 @@ pyproj
 contextily
 scikit-learn
 streamlit
+lxml
