@@ -10,3 +10,4 @@ seaborn
 pyproj
 contextily
 scikit-learn
+streamlit
