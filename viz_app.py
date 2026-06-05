@@ -31,6 +31,12 @@ if __name__ == '__main__':
 
 
     st.header('Popularity of Each Station at different Hours')
+
+
+    st.markdown('''
+    The visualisation below displays the popularity of each station given a particular hour of the day, station popularity
+    is computed by counting the total number of journeys which have either started or ended at each station''')
+
     hour = st.slider('Hour', 0, 23, value = 12, key = 'station_hour')
 
     stations_loc = get_stations_location(stations_df)
