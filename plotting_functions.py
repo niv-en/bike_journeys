@@ -20,6 +20,9 @@ import numbers
 from zipfile import ZipFile
 import pandas as pd
 
+import requests
+from io import StringIO
+
 #def load_trips_df(path):
 #    with ZipFile(path) as zf:
 #        csv_files = [
@@ -33,6 +36,22 @@ import pandas as pd
 #        # just take the first valid CSV
 #        with zf.open(csv_files[0]) as f:
 #            return pd.read_csv(f)
+
+def load_trips_data():
+
+    dataset_urls =  ['417JourneyDataExtract01Apr2025-14Apr2025.csv',]
+    journeys_df = pd.DataFrame()
+
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
+
+
+    for url in dataset_urls:
+        url = f'https://cycling.data.tfl.gov.uk/usage-stats/{url}'
+        response = requests.get(url, headers=headers)
+        temp_df = pd.read_csv(StringIO(response.text))
+        journeys_df = pd.concat((journeys_df, temp_df))
 
 
 def transform_rush_hr(trips_df: pd.DataFrame) -> None:
