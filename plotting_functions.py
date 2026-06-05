@@ -53,25 +53,48 @@ def load_trips_data():
         temp_df = pd.read_csv(StringIO(response.text))
         journeys_df = pd.concat((journeys_df, temp_df))
 
-
-def transform_rush_hr(trips_df: pd.DataFrame) -> None:
-    trips_df['rush_hour'] = trips_df['rush_period'].apply(lambda x: False if x == 'non_rush' else True)
+    return journeys_df
 
 
-def get_stations_location(trips_df : pd.DataFrame) -> dict:
+def preprocess_df(df, stations_df):
+    df = df.copy()
 
-    trips_df['start_loc'] = trips_df.apply(lambda x: (x.start_long, x.start_lat), axis=1)
-    trips_df['end_loc'] = trips_df.apply(lambda x: (x.end_long, x.end_lat), axis=1)
+    df['start_date'] = pd.to_datetime(df['Start date'], format='mixed')
+    df['end_date'] = pd.to_datetime(df['End date'], format='mixed')
+    df['start_hour'] = df['start_date'].dt.hour
+    df['end_hour'] = df['end_date'].dt.hour
 
-    start_stations = [tuple(x) for x in trips_df[['start_station', 'start_loc']].values]
-    end_stations = [tuple(x) for x in trips_df[['end_station', 'end_loc']].values]
-    return dict(set(start_stations + end_stations))
+    df.drop(columns=['Start date', 'End date'], inplace=True)
+    # dividing by 60_000 to get to minutes
+    df['duration_mins'] = df['Total duration (ms)'] / 60_000
+
+    df = df[df['duration_mins'] > 3]
+    df = df[df['duration_mins'] < 180]
+
+    rush_hours = {7, 8, 17, 18}
+    weekdays = {1, 2, 3, 4, 5}
+
+    start_weekday, end_weekday = df.start_date.dt.weekday, df.end_date.dt.weekday
+
+    df['rush_hour'] = ((df.start_hour.isin(rush_hours) & start_weekday.isin(weekdays)) |
+                       (df.end_hour.isin(rush_hours) & end_weekday.isin(weekdays)))
+
+    df = df.merge(stations_df, left_on='Start station', right_on='name')
+
+    return df
+
 
 def get_stations_popularity(trips_df : pd.DataFrame) -> dict:
 
     stations, counts = np.unique(trips_df[['start_station', 'end_station']].values.ravel(), return_counts=True)
     return  dict(zip(stations, counts))
 
+def get_stations_location(stations_df : pd.DataFrame) -> dict:
+
+    stations_df['location'] = stations_df.apply(lambda x: (x.long, x.lat), axis=1)
+    stations_loc = dict(stations_df[['name', 'location']].values)
+
+    return stations_loc
 
 def plot_stations(ax,
                   stations_loc: dict,
