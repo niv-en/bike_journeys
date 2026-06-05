@@ -49,7 +49,7 @@ if __name__ == '__main__':
             ax_journeys,
             journeys=journeys,
             station_loc=stations_loc,
-            title= f'Top 10 Most Popular Undirected Journeys at {hour if hour > 10 else f"0{hour}"  }:00',
+            title= f'Top 10 Most Popular Undirected Journeys at {hour_journey if hour_journey> 10 else f"0{hour_journey}"  }:00',
             journey_mapping=journey_counts,
             cmap_name="viridis_r",
             show_arrows=True)
