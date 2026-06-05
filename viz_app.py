@@ -86,8 +86,9 @@ if __name__ == '__main__':
 
     ## Stations Source Sink Disparity at Different Hours
 
-    The visualisation below displays the top 10 most popular undirected journeys at different hours of the day.
-    The popularity of an undirected journey is calculated through summing the number of journeys from A to B and B to A to get an aggregate figure for travelling between A and B. 
+    The visualisation below displays the source sink disparity for each station at different hours of the day.
+   
+    Source Sink disparity explained here:  
 
     A slider is provided to configure the visualisation to a particular hour of day. 
     ''')
@@ -99,7 +100,7 @@ if __name__ == '__main__':
 
     stations_delta = get_stations_source_sink(journeys_df_hour)
 
-    ax_sink = plot_stations(ax_sink , stations_loc, f'Station Popularity at {hour_sink if hour_sink > 10 else f"0{hour_sink}"  }:00',  stations_delta, 'no. journeys', True, None, size_scaling= False, alpha_scaling=False)
+    ax_sink = plot_stations(ax_sink , stations_loc, f'Station Source Sink Disparity at {hour_sink if hour_sink > 10 else f"0{hour_sink}"  }:00',  stations_delta, 'no. journeys', True, None, size_scaling= False, alpha_scaling=False)
 
     st.pyplot(fig_sink)
 
