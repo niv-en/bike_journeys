@@ -23,8 +23,8 @@ if __name__ == '__main__':
     
     *App can take a long time to load :(
     
-    Web app which displays visualisations around Transport for London(TfL) cycle hire network by leveraging TfL open data. 
-    All visualisations are based off 2 weeks of data from the the 1st to the 14th of April 2025. 
+    Web app which displays visualisations about the Transport for London(TfL) cycle hire network by leveraging TfL open data. 
+    All visualisations are based off of 2 weeks of data from the 1st to the 14th of April 2025. 
     
     TfL cycling open data is available from: https://cycling.data.tfl.gov.uk/ 
     
@@ -59,10 +59,12 @@ if __name__ == '__main__':
     st.markdown('''
     
     ## Popularity of Each Journey at Different Hours
-    The visualisation below displays the top 10 most popular undirected journeys at differents of the day.
-    The popularity of an undirected journey means summing the number of journeys from A to B and B to A  to get an aggregate figure for travelling between A and B. 
+    
+    The visualisation below displays the top 10 most popular undirected journeys at different hours of the day.
+    The popularity of an undirected journey is calculated through summing the number of journeys from A to B and B to A to get an aggregate figure for travelling between A and B. 
 
     A slider is provided to configure the visualisation to a particular hour of day. 
+    
     ''')
     hour_journey = st.slider('Hour', 0, 23, value = 12, key = 'journey_hour' )
 
