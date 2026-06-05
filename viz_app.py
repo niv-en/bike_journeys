@@ -89,7 +89,7 @@ if __name__ == '__main__':
     The visualisation below displays the sink source disparity for each station at different hours of the day.
     
     The Sink Source disparity measures the difference between the number of journeys which end at a particular location
-    and those which start at particular location. 
+    and those which start at particular location, is defined as the following:
     
     ''')
 
@@ -98,19 +98,32 @@ if __name__ == '__main__':
 
 
     st.markdown('''
+    
+    It is bounded between (1,-1), values close to 1 indicate that more journeys end at a particular location than start,
+    and vice versa for values close to 0 
+    
     A slider is provided to configure the visualisation to a particular hour of day. 
     ''')
 
     fig_sink , ax_sink = plt.subplots()
 
     hour_sink= st.slider('Hour', 0, 23, value = 12, key = 'hour_sink' )
-    journeys_df_hour = journeys_df[journeys_df['start_hour'] == hour_journey]
+
+    journeys_df_hour = journeys_df[journeys_df['start_hour'] == hour_sink]
 
     stations_delta = get_stations_source_sink(journeys_df_hour)
 
-    ax_sink = plot_stations(ax_sink , stations_loc, f'Station Source Sink Disparity at {hour_sink if hour_sink > 10 else f"0{hour_sink}"  }:00',  stations_delta, 'no. journeys', True, None, size_scaling= False, alpha_scaling=False)
+    ax_sink = plot_stations(ax_sink , stations_loc, f'Station Sink-Source Disparity at {hour_sink if hour_sink > 10 else f"0{hour_sink}"  }:00',  stations_delta, 'no. journeys', True, None, size_scaling= False, alpha_scaling=False)
 
     st.pyplot(fig_sink)
+
+    st.markdown('''
+    
+    As a result it is expected for stations around the outskirts to have a negative Sink-Source disparity in the mornings, as 
+    
+    
+    
+    ''')
 
 
 
