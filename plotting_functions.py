@@ -20,19 +20,20 @@ import numbers
 from zipfile import ZipFile
 import pandas as pd
 
-def load_trips_df(path):
-    with ZipFile(path) as zf:
-        csv_files = [
-            name for name in zf.namelist()
-            if name.endswith(".csv") and not name.startswith("__MACOSX")
-        ]
+#def load_trips_df(path):
+#    with ZipFile(path) as zf:
+#        csv_files = [
+#            name for name in zf.namelist()
+#            if name.endswith(".csv") and not name.startswith("__MACOSX")
+#        ]
+#
+#        if not csv_files:
+#            raise ValueError(f"No CSV found in ZIP: {zf.namelist()}")
+#
+#        # just take the first valid CSV
+#        with zf.open(csv_files[0]) as f:
+#            return pd.read_csv(f)
 
-        if not csv_files:
-            raise ValueError(f"No CSV found in ZIP: {zf.namelist()}")
-
-        # just take the first valid CSV
-        with zf.open(csv_files[0]) as f:
-            return pd.read_csv(f)
 
 def transform_rush_hr(trips_df: pd.DataFrame) -> None:
     trips_df['rush_hour'] = trips_df['rush_period'].apply(lambda x: False if x == 'non_rush' else True)
