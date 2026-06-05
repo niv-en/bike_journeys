@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
 
     journeys_df = load_trips_data()
-    station_df = pd.read_csv('station_medata.csv')
+    station_df = pd.read_csv('station_metadata.csv')
 
 
     st.header('Popularity Of Each Station at diff Hours')
