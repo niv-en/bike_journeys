@@ -95,6 +95,20 @@ def get_stations_location(stations_df : pd.DataFrame) -> dict:
 
     return stations_loc
 
+def get_stations_source_sink(journeys_df : pd.DataFrame) -> dict:
+
+    source_counts = journeys_df['Start station'].value_counts().reset_index()
+    sink_counts = journeys_df['End station'].value_counts().reset_index()
+
+    source_sink_df = source_counts.merge(sink_counts, left_on='Start station', right_on='End station',
+                                         suffixes=['_source', '_sink'])
+
+    source_sink_df['delta'] = source_sink_df['count_sink'] - source_sink_df['count_source']
+    source_sink_df['popularity'] = source_sink_df['count_sink'] + source_sink_df['count_source']
+    source_sink_df['normalised_delta'] = source_sink_df['delta'] / source_sink_df['popularity']
+
+    return dict(source_sink_df[['Start station', 'normalised_delta']].values)
+
 def plot_stations(ax,
                   stations_loc: dict,
                   title: str,

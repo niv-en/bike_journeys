@@ -1,11 +1,8 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
-import os
 
-from plotting_functions import load_trips_data, preprocess_df, get_stations_location, plot_stations, get_stations_popularity, plot_journeys
+from plotting_functions import load_trips_data, preprocess_df, get_stations_location, plot_stations, get_stations_popularity, plot_journeys, get_stations_source_sink
 
 from collections import Counter
 
@@ -64,8 +61,8 @@ if __name__ == '__main__':
     The popularity of an undirected journey is calculated through summing the number of journeys from A to B and B to A to get an aggregate figure for travelling between A and B. 
 
     A slider is provided to configure the visualisation to a particular hour of day. 
-    
     ''')
+
     hour_journey = st.slider('Hour', 0, 23, value = 12, key = 'journey_hour' )
 
     journeys_df_hour = journeys_df[journeys_df['start_hour'] == hour_journey]
@@ -84,4 +81,27 @@ if __name__ == '__main__':
             show_arrows=True)
 
     st.pyplot(fig_journeys)
+
+    st.markdown('''
+
+    ## Stations Source Sink Disparity at Different Hours
+
+    The visualisation below displays the top 10 most popular undirected journeys at different hours of the day.
+    The popularity of an undirected journey is calculated through summing the number of journeys from A to B and B to A to get an aggregate figure for travelling between A and B. 
+
+    A slider is provided to configure the visualisation to a particular hour of day. 
+    ''')
+
+    fig_sink , ax_sink = plt.subplots()
+
+    hour_sink= st.slider('Hour', 0, 23, value = 12, key = 'hour_sink' )
+    journeys_df_hour = journeys_df[journeys_df['start_hour'] == hour_journey]
+
+    stations_delta = get_stations_source_sink(journeys_df_hour)
+
+    ax_sink = plot_stations(ax_sink , stations_loc, f'Station Popularity at {hour if hour > 10 else f"0{hour}"  }:00',  stations_delta, 'no. journeys', True, None, size_scaling= False, alpha_scaling=False)
+
+    st.pyplot(fig_sink)
+
+
 
