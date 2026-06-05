@@ -34,6 +34,9 @@ if __name__ == '__main__':
 
 
     st.markdown('''
+    
+    ## Popularity of Each Station at Different Hours
+    
     The visualisation below displays the popularity of each station given a particular hour of the day, station popularity
     is computed by counting the total number of journeys which have either started or ended at each station. 
     
@@ -56,9 +59,9 @@ if __name__ == '__main__':
 
     st.pyplot(fig_pop)
 
-    st.header('Popularity of Each Journey at Different Hours')
-
     st.markdown('''
+    
+    ## Popularity of Each Journey at Different Hours
     The visualisation below displays the top 10 most popular undirected journeys at differents of the day.
     The popularity of an undirected journey means summing the number of journeys from A to B and B to A  to get an aggregate figure for travelling between A and B. 
 
