@@ -91,9 +91,13 @@ if __name__ == '__main__':
     The Sink Source disparity measures the difference between the number of journeys which end at a particular location
     and those which start at particular location. 
     
-    $ \text{sink-source disparity} =  \frac{1}{2} $
-   
+    ''')
 
+    st.latex(
+        r"\text{sink-source disparity} = \frac{\text{sink count} - \text{source count}}{\text{sink count} + \text{source count}}")
+
+
+    st.markdown('''
     A slider is provided to configure the visualisation to a particular hour of day. 
     ''')
 
