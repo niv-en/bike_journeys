@@ -20,7 +20,9 @@ if __name__ == '__main__':
 
     st.markdown('''
     
-    Web app which displays visualisations from 2 weeks of Transport for London(TfL) cycle hire data.
+    *App can take a long time to load
+    
+    Web app which displays visualisations around Transport for London(TfL) cycle hire network. 
     All visualisations are based off 2 weeks of data from the the 1st to the 14th of April 2025 to keep the app lightweight. 
     ''')
 
