@@ -22,8 +22,11 @@ if __name__ == '__main__':
     
     *App can take a long time to load
     
-    Web app which displays visualisations around Transport for London(TfL) cycle hire network. 
-    All visualisations are based off 2 weeks of data from the the 1st to the 14th of April 2025 to keep the app lightweight. 
+    Web app which displays visualisations around Transport for London(TfL) cycle hire network by leveraging TfL open data. 
+    All visualisations are based off 2 weeks of data from the the 1st to the 14th of April 2025. 
+    
+    TfL cycling open data is available from: https://cycling.data.tfl.gov.uk/ 
+    
     ''')
 
 
