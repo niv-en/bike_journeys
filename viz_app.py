@@ -16,11 +16,12 @@ if __name__ == '__main__':
 
     journeys_df = preprocess_df(journeys_df, stations_df[['name', 'lat', 'long']])
 
-    st.header('TfL Bike Journeys Visualisation App')
 
     st.markdown('''
     
-    *App can take a long time to load
+    # TfL Bike Journeys Visualisation App
+    
+    *App can take a long time to load :(
     
     Web app which displays visualisations around Transport for London(TfL) cycle hire network by leveraging TfL open data. 
     All visualisations are based off 2 weeks of data from the the 1st to the 14th of April 2025. 
@@ -28,10 +29,6 @@ if __name__ == '__main__':
     TfL cycling open data is available from: https://cycling.data.tfl.gov.uk/ 
     
     ''')
-
-
-    st.header('Popularity of Each Station at different Hours')
-
 
     st.markdown('''
     
