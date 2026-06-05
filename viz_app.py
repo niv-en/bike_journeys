@@ -5,14 +5,14 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
-from plotting_functions import load_trips_df, get_stations_location, get_stations_popularity, plot_stations
+from plotting_functions import load_trips_data
 
 if __name__ == '__main__':
 
     st.write('test')
 
 
-    journeys_df = load_trips_df()
+    journeys_df = load_trips_data()
     station_df = pd.read_csv('station_medata.csv')
 
 
