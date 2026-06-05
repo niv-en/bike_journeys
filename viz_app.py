@@ -54,6 +54,11 @@ if __name__ == '__main__':
     st.pyplot(fig_pop)
 
     st.markdown('''
+    Different stations have different levels of popularity throughout the day. At 08:00 cycle hire stations around Waterloo are particularly 
+    popular which is likely a result of commuters. However, at 12:00 cycle hire stations around Hyde Park are the most popular.   
+    ''')
+
+    st.markdown('''
     
     ## Popularity of Each Journey at Different Hours
     
@@ -81,6 +86,11 @@ if __name__ == '__main__':
             show_arrows=True)
 
     st.pyplot(fig_journeys)
+
+    st.markdown('''
+    Similarity to the popularity of each station, at 08:00 the majority of the top 10 journeys are between cycle hire stations near Waterloo and the City of London (Commuters). 
+    At 12:00 all of the top 10 journeys are between cycle hire stations within Hyde Park, which indicates recreational cycling. 
+    ''')
 
     st.markdown('''
 
