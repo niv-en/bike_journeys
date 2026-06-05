@@ -31,10 +31,9 @@ if __name__ == '__main__':
     stations_pop = get_stations_popularity(journeys_df_hour)
 
 
-    fig,ax = plt.subplots(2)
-    ax[0] = plot_stations(ax[0] , stations_loc, f'Station Popularity at {hour if hour > 10 else f"0{hour}"  }:00',  stations_pop, 'no. journeys', True, None)
+    fig,ax = plt.subplots(2, figsize=(12,12))
 
-    st.pyplot(fig)
+    ax[0] = plot_stations(ax[0] , stations_loc, f'Station Popularity at {hour if hour > 10 else f"0{hour}"  }:00',  stations_pop, 'no. journeys', True, None)
 
     journey_counts = Counter([tuple(sorted(x)) for x in journeys_df_hour[['Start station', 'End station']].values])
     journeys = [x[0] for x in journey_counts.most_common(10)]
