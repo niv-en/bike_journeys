@@ -86,7 +86,7 @@ def preprocess_df(df, stations_df):
 
 def get_stations_popularity(trips_df : pd.DataFrame) -> dict:
 
-    stations, counts = np.unique(trips_df[['start_station', 'end_station']].values.ravel(), return_counts=True)
+    stations, counts = np.unique(trips_df[['Start station', 'End station']].values.ravel(), return_counts=True)
     return  dict(zip(stations, counts))
 
 def get_stations_location(stations_df : pd.DataFrame) -> dict:
