@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
 
     st.header('Popularity of Each Station at different Hours')
-    hour = st.slider('Hour', 0, 23, value = 12, )
+    hour = st.slider('Hour', 0, 23, value = 12, key = 'station_hour')
 
     stations_loc = get_stations_location(stations_df)
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     st.pyplot(fig_pop)
 
     st.header('Popularity of Each Journey at Different Hours')
-    hour_journey = st.slider('Hour', 0, 23, value = 12, )
+    hour_journey = st.slider('Hour', 0, 23, value = 12, key = 'journey_hour' )
 
     journeys_df_hour = journeys_df[journeys_df['start_hour'] == hour_journey]
     journey_counts = Counter([tuple(sorted(x)) for x in journeys_df_hour[['Start station', 'End station']].values])
