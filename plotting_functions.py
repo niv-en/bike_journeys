@@ -2,26 +2,25 @@ import matplotlib.pyplot as plt
 import geopandas as gpd
 from cartopy import crs as ccrs
 
-import pandas as pd
 from shapely.geometry import Point, Polygon
-import numpy as np
-
-import matplotlib as mpl
-import seaborn as sns
+from shapely.ops import nearest_points
 
 from pyproj import Transformer
 
-import os
-import re
-
 import contextily as ctx
-import numbers
-
-from zipfile import ZipFile
-import pandas as pd
-
+import matplotlib.pyplot as plt
+import geopandas as gpd
+from cartopy import crs as ccrs
+from geodatasets import get_path
 import requests
 from io import StringIO
+import pandas as pd
+import numpy as np
+import matplotlib as mpl
+import numbers
+from collections import Counter
+from matplotlib.patches import FancyArrowPatch, Circle
+
 
 #def load_trips_df(path):
 #    with ZipFile(path) as zf:
@@ -192,4 +191,154 @@ def plot_stations(ax,
     ax.set_title(title, size=16)
     ax.axis('off');
 
+    return ax
+
+
+def plot_journeys(
+        ax,
+        journeys: list[tuple],
+        station_loc: dict,
+        title: str,
+        journey_mapping: dict | None = None,
+        background: bool = True,
+        cmap_name: str = "plasma",
+        show_arrows: bool = True,
+        location_labels: dict = None) -> None:
+
+    if journey_mapping is None:
+        journey_mapping = Counter(journeys)
+
+    transformer = Transformer.from_crs("EPSG:4326", "EPSG:3857", always_xy=True)
+
+
+    unique_journeys = list(dict.fromkeys(journeys))
+    values = np.array([journey_mapping.get(j, 0) for j in unique_journeys], dtype=float)
+
+    if len(values) == 0:
+        raise ValueError("No journeys to plot.")
+
+    vmin = np.percentile(values, 5)
+    vmax = np.percentile(values, 95)
+    if vmin == vmax:
+        vmin, vmax = values.min(), values.max() + 1
+
+    norm = mpl.colors.Normalize(vmin=vmin, vmax=vmax)
+    cmap = plt.get_cmap(cmap_name)
+
+    max_value = values.max()
+
+    top_journeys = journeys
+    station_points = {}
+
+    def projected(station):
+        # function to project coordinates to the correct system.
+        if station not in station_points:
+            station_points[station] = transformer.transform(*station_loc[station])
+        return station_points[station]
+
+    x_min, x_max, y_min, y_max = +1e10, -1e10, +1e10, -1e10
+
+    for journey in unique_journeys:
+        start, end = journey
+        value = journey_mapping.get(journey, 0)
+
+        x1, y1 = projected(start)
+        x2, y2 = projected(end)
+
+        # updating the x,y map limits if necessary
+        temp_x_min, temp_x_max = sorted([x1, x2])
+        temp_y_min, temp_y_max = sorted([y1, y2])
+
+        x_min = temp_x_min if temp_x_min < x_min else x_min
+        x_max = temp_x_max if temp_x_max > x_max else x_max
+
+        y_min = temp_y_min if temp_y_min < y_min else y_min
+        y_max = temp_y_max if temp_y_max > y_max else y_max
+
+        colour = cmap(norm(value))
+
+        # Popularity controls thickness
+
+        popularity = value / max_value if max_value else 0
+        linewidth = 2 + 2 * popularity
+        alpha = 1
+
+        is_top = journey in top_journeys
+        zorder = 4 if is_top else 2
+
+        if start != end:
+            # if not a loop plot an arrow from A to B
+            rad = 0.18 if hash(journey) % 2 == 0 else -0.18
+
+            arrow = FancyArrowPatch(
+                (x1, y1),
+                (x2, y2),
+                connectionstyle=f"arc3,rad={rad}",
+                arrowstyle="<|-|>" if show_arrows else "-",
+                mutation_scale=8 + 10 * popularity,
+                linewidth=linewidth,
+                color=colour,
+                alpha=alpha,
+                linestyle="-",
+                zorder=zorder,
+            )
+            ax.add_patch(arrow)
+
+        else:
+            # if it is a loop then plot a circle from A to A
+            radius = 250 + 200 * popularity
+            circle = Circle(
+                (x1 - radius, y1),
+                radius,
+                fill=False,
+                edgecolor=colour,
+                linewidth=linewidth,
+                alpha=alpha,
+                zorder=zorder,
+            )
+            ax.add_patch(circle)
+
+    xs, ys = zip(*[projected(station) for station in station_loc])
+    ax.scatter(
+        xs,
+        ys,
+        s=10,
+        c="black",
+        alpha=0.2,
+        linewidths=0,
+        zorder=5,
+    )
+
+    if background:
+        ctx.add_basemap(
+            ax,
+            source=ctx.providers.CartoDB.PositronNoLabels,
+            alpha=0.95,
+        )
+
+    if location_labels:
+        for location, (lon, lat) in location_labels.items():
+            x, y = transformer.transform(lon, lat)
+            ax.text(x, y, s=location, fontsize=16, weight="bold")
+
+    sm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)
+    sm.set_array([])
+
+    cbar = fig.colorbar(sm, ax=ax, shrink=0.75, pad=0.01)
+    cbar.set_label("Journey popularity", fontsize=10)
+
+    ax.set_title(title, fontsize=16, weight="bold", pad=12)
+    ax.set_axis_off()
+
+    # adjusting the x,y lims to only show the section of the map relevant to the journeys.
+    x_range = x_max - x_min
+    y_range = y_max - y_min
+
+    x_pad = 0.1 * x_range
+    y_pad = 0.1 * y_range
+
+    ax.set_xlim(x_min - x_pad, x_max + x_pad)
+    ax.set_ylim(y_min - y_pad, y_max + y_pad)
+
+    plt.tight_layout()
     return ax
