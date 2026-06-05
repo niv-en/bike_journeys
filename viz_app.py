@@ -31,15 +31,18 @@ if __name__ == '__main__':
     stations_pop = get_stations_popularity(journeys_df_hour)
 
 
-    fig,ax = plt.subplots(nrows =1 , ncols = 2 , figsize=(24,12))
+    fig,ax_pop = plt.subplots()
 
-    ax[0] = plot_stations(ax[0] , stations_loc, f'Station Popularity at {hour if hour > 10 else f"0{hour}"  }:00',  stations_pop, 'no. journeys', True, None)
+    ax_pop = plot_stations(ax_pop , stations_loc, f'Station Popularity at {hour if hour > 10 else f"0{hour}"  }:00',  stations_pop, 'no. journeys', True, None)
 
     journey_counts = Counter([tuple(sorted(x)) for x in journeys_df_hour[['Start station', 'End station']].values])
     journeys = [x[0] for x in journey_counts.most_common(10)]
 
-    ax[1] = plot_journeys(
-            ax[1],
+
+    fig, ax_journeys = plt.subplots()
+
+    ax_journeys = plot_journeys(
+            ax_journeys,
             journeys=journeys,
             station_loc=stations_loc,
             title="Top 10 Rush Hour Journeys",
