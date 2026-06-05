@@ -11,13 +11,18 @@ from collections import Counter
 
 if __name__ == '__main__':
 
-    st.write('test')
-
-
     journeys_df = load_trips_data()
     stations_df = pd.read_csv('station_metadata.csv')
 
     journeys_df = preprocess_df(journeys_df, stations_df[['name', 'lat', 'long']])
+
+    st.header('TfL Bike Journeys Visualisation App')
+
+    st.markdown('''
+    
+    Web app which displays visualisations from 2 weeks of Transport for London(TfL) cycle hire data.
+    All visualisations are based off 2 weeks of data from the the 1st to the 14th of April 2025 to keep the app lightweight. 
+    ''')
 
 
     st.header('Popularity of Each Station at different Hours')
