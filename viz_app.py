@@ -20,7 +20,7 @@ if __name__ == '__main__':
     
     *App can take a long time to load :(
     
-    Web app which displays visualisations about the Transport for London(TfL) cycle hire network by leveraging TfL open data. 
+    Web app which displays visualisations about the Transport for London (TfL) cycle hire network by leveraging TfL open data. 
     All visualisations are based off of 2 weeks of data from the 1st to the 14th of April 2025. 
     
     TfL cycling open data is available from: https://cycling.data.tfl.gov.uk/ 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     st.markdown('''
     Different stations have different levels of popularity throughout the day. At 08:00 cycle hire stations around Waterloo are particularly 
-    popular which is likely a result of commuters. However, at 12:00 cycle hire stations around Hyde Park are the most popular.   
+    popular, which is likely a result of commuters. However, at 12:00 cycle hire stations around Hyde Park are the most popular.   
     ''')
 
     st.markdown('''
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     st.pyplot(fig_journeys)
 
     st.markdown('''
-    Similarity to the popularity of each station, at 08:00 the majority of the top 10 journeys are between cycle hire stations near Waterloo and the City of London (Commuters). 
+    Similarly to the popularity of each station, at 08:00 the majority of the top 10 journeys are between cycle hire stations near Waterloo and the City of London (Commuters). 
     At 12:00 all of the top 10 journeys are between cycle hire stations within Hyde Park, which indicates recreational cycling. 
     ''')
 
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     The visualisation below displays the sink source disparity for each station at different hours of the day.
     
     The Sink Source disparity measures the difference between the number of journeys which end at a particular location
-    and those which start at particular location, is defined as the following:
+    and those which start at a particular location is defined as the following:
     
     ''')
 
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     st.markdown('''
     
     It is bounded between (1,-1), values close to 1 indicate that more journeys end at a particular location than start,
-    and vice versa for values close to 0 
+    and vice versa for values close to -1
     
     A slider is provided to configure the visualisation to a particular hour of day. 
     ''')
@@ -129,12 +129,9 @@ if __name__ == '__main__':
 
     st.markdown('''
     
-    Stations around the outskirts to have a negative Sink-Source disparity in the mornings,
-    as more people are likely to start their journey into the centre of the city. However, during the night stations around
+    Stations around the outskirts tend to have a negative Sink-Source disparity in the mornings (~07:00),
+    as more people are likely to start their journey into the centre of the city. However, during the night(~21:00) stations around
     the outskirts tend to have a positive Sink-Source disparity, as people arrive back from the city centre after their day. 
-    
-    For example, compare between when visualisation hour is set to 07:00 (morning) and 21:00 (nightime)
-    
     ''')
 
 
