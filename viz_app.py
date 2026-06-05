@@ -84,11 +84,15 @@ if __name__ == '__main__':
 
     st.markdown('''
 
-    ## Stations Source Sink Disparity at Different Hours
+    ## Stations Sink-Source Disparity at Different Hours
 
-    The visualisation below displays the source sink disparity for each station at different hours of the day.
+    The visualisation below displays the sink source disparity for each station at different hours of the day.
+    
+    The Sink Source disparity measures the difference between the number of journeys which end at a particular location
+    and those which start at particular location. 
+    
+    $ \text{sink-source disparity} =  \frac{1}{2} $
    
-    Source Sink disparity explained here:  
 
     A slider is provided to configure the visualisation to a particular hour of day. 
     ''')
