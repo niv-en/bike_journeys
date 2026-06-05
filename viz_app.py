@@ -119,9 +119,11 @@ if __name__ == '__main__':
 
     st.markdown('''
     
-    As a result it is expected for stations around the outskirts to have a negative Sink-Source disparity in the mornings, as 
+    Stations around the outskirts to have a negative Sink-Source disparity in the mornings,
+    as more people are likely to start their journey into the centre of the city. However, during the night stations around
+    the outskirts tend to have a positive Sink-Source disparity, as people arrive back from the city centre after their day. 
     
-    
+    For example, compare between when visualisation hour is set to 07:00 (morning) and 21:00 (nightime)
     
     ''')
 
