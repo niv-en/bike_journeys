@@ -324,6 +324,7 @@ def plot_journeys(
     sm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)
     sm.set_array([])
 
+    fig = ax.get_figure()
     cbar = fig.colorbar(sm, ax=ax, shrink=0.75, pad=0.01)
     cbar.set_label("Journey popularity", fontsize=10)
 
