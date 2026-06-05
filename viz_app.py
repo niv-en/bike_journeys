@@ -31,10 +31,10 @@ if __name__ == '__main__':
     
     ## Popularity of Each Station at Different Hours
     
-    The visualisation below displays the popularity of each station given a particular hour of the day, station popularity
+    The visualisation below displays the popularity of each station given a particular hour of the day. Station popularity
     is computed by counting the total number of journeys which have either started or ended at each station. 
     
-    A slider is provided to configure the visualisation to a particular hour of day. 
+    A slider is provided to configure the visualisation to a particular hour of the day. 
     
     ''')
 
@@ -63,9 +63,9 @@ if __name__ == '__main__':
     ## Popularity of Each Journey at Different Hours
     
     The visualisation below displays the top 10 most popular undirected journeys at different hours of the day.
-    The popularity of an undirected journey is calculated through summing the number of journeys from A to B and B to A to get an aggregate figure for travelling between A and B. 
+    The popularity of an undirected journey is calculated by summing the number of journeys from A to B and B to A to get an aggregate figure for travelling between A and B. 
 
-    A slider is provided to configure the visualisation to a particular hour of day. 
+    A slider is provided to configure the visualisation to a particular hour of the day. 
     ''')
 
     hour_journey = st.slider('Hour', 0, 23, value = 12, key = 'journey_hour' )
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     st.pyplot(fig_journeys)
 
     st.markdown('''
-    Similarly to the popularity of each station, at 08:00 the majority of the top 10 journeys are between cycle hire stations near Waterloo and the City of London (Commuters). 
+    Similarly to the popularity of each station, at 08:00 the majority of the top 10 journeys are between cycle hire stations near Waterloo and the City of London (Likely Commuters). 
     At 12:00 all of the top 10 journeys are between cycle hire stations within Hyde Park, which indicates recreational cycling. 
     ''')
 
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     The visualisation below displays the sink source disparity for each station at different hours of the day.
     
     The Sink Source disparity measures the difference between the number of journeys which end at a particular location
-    and those which start at a particular location is defined as the following:
+    and those which start at a particular location is defined as:
     
     ''')
 
@@ -109,10 +109,10 @@ if __name__ == '__main__':
 
     st.markdown('''
     
-    It is bounded between (1,-1), values close to 1 indicate that more journeys end at a particular station than start,
+    It is bounded between (-1,1), values close to 1 indicate that more journeys end at a particular station than start,
     and vice versa for values close to -1
     
-    A slider is provided to configure the visualisation to a particular hour of day. 
+    A slider is provided to configure the visualisation to a particular hour of the day. 
     ''')
 
     fig_sink , ax_sink = plt.subplots()
@@ -123,14 +123,14 @@ if __name__ == '__main__':
 
     stations_delta = get_stations_source_sink(journeys_df_hour)
 
-    ax_sink = plot_stations(ax_sink , stations_loc, f'Station Sink-Source Disparity at {hour_sink if hour_sink > 10 else f"0{hour_sink}"  }:00',  stations_delta, 'no. journeys', True, None, size_scaling= False, alpha_scaling=False)
+    ax_sink = plot_stations(ax_sink , stations_loc, f'Station Sink-Source Disparity at {hour_sink if hour_sink > 10 else f"0{hour_sink}"  }:00',  stations_delta, 'sink-source disparity', True, None, size_scaling= False, alpha_scaling=False)
 
     st.pyplot(fig_sink)
 
     st.markdown('''
     
     Stations around the outskirts tend to have a negative Sink-Source disparity in the mornings (~07:00),
-    as more people are likely to start their journey into the centre of the city. However, during the night(~21:00) stations around
+    as more people are likely to start their journeys into the centre of the city. However, during the night(~21:00) stations around
     the outskirts tend to have a positive Sink-Source disparity, as people arrive back from the city centre after their day. 
     ''')
 
