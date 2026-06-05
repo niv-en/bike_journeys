@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
     stations_delta = get_stations_source_sink(journeys_df_hour)
 
-    ax_sink = plot_stations(ax_sink , stations_loc, f'Station Popularity at {hour if hour > 10 else f"0{hour}"  }:00',  stations_delta, 'no. journeys', True, None, size_scaling= False, alpha_scaling=False)
+    ax_sink = plot_stations(ax_sink , stations_loc, f'Station Popularity at {hour_sink if hour_sink > 10 else f"0{hour_sink}"  }:00',  stations_delta, 'no. journeys', True, None, size_scaling= False, alpha_scaling=False)
 
     st.pyplot(fig_sink)
 
