@@ -31,7 +31,7 @@ if __name__ == '__main__':
     stations_pop = get_stations_popularity(journeys_df_hour)
 
 
-    fig,ax = plt.subplots(2, figsize=(12,12))
+    fig,ax = plt.subplots(nrows =1 , ncols = 2 , figsize=(24,12))
 
     ax[0] = plot_stations(ax[0] , stations_loc, f'Station Popularity at {hour if hour > 10 else f"0{hour}"  }:00',  stations_pop, 'no. journeys', True, None)
 
