@@ -31,15 +31,17 @@ if __name__ == '__main__':
     stations_pop = get_stations_popularity(journeys_df_hour)
 
 
-    fig,ax_pop = plt.subplots()
+    fig_pop,ax_pop = plt.subplots()
 
     ax_pop = plot_stations(ax_pop , stations_loc, f'Station Popularity at {hour if hour > 10 else f"0{hour}"  }:00',  stations_pop, 'no. journeys', True, None)
+
+    st.pyplot(fig_pop)
 
     journey_counts = Counter([tuple(sorted(x)) for x in journeys_df_hour[['Start station', 'End station']].values])
     journeys = [x[0] for x in journey_counts.most_common(10)]
 
 
-    fig, ax_journeys = plt.subplots()
+    fig_journeys, ax_journeys = plt.subplots()
 
     ax_journeys = plot_journeys(
             ax_journeys,
@@ -50,5 +52,5 @@ if __name__ == '__main__':
             cmap_name="viridis_r",
             show_arrows=True)
 
-    st.pyplot(fig)
+    st.pyplot(fig_journeys)
 
