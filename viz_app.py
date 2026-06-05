@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
     st.markdown('''
     
-    It is bounded between (1,-1), values close to 1 indicate that more journeys end at a particular location than start,
+    It is bounded between (1,-1), values close to 1 indicate that more journeys end at a particular station than start,
     and vice versa for values close to -1
     
     A slider is provided to configure the visualisation to a particular hour of day. 
